@@ -1,4 +1,3 @@
-const { foods } = require('../data');
 const Result = require('../models/result');
 
 //get all data that own by a user

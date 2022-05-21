@@ -1,4 +1,4 @@
-const foodRouter = require('./routes/foodRouter');
+const foodRouter = require('./routes/predictionRouter');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const connectDB = require('./db/connect');
