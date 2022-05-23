@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 
-const ResultSchema = new mongoose.Schema({
-    owner: String,
+const resultSchema = new mongoose.Schema({
+    createdBy: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'Please provide user credential'],
+    },
     imageUrl: String,
     result: String,
-})
+}, { timestamp: true })
 
-//description,
-module.exports =  mongoose.model('Result', ResultSchema);
+module.exports =  mongoose.model('Result', resultSchema);

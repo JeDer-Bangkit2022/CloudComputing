@@ -1,58 +1,69 @@
+const recipe = require('../models/recipe');
 const Result = require('../models/result');
+
 
 //get all data that own by a user
 const getAllPrediction = async (req, res) => {
   try {
-    console.log(req.body);
-    const { owner: resultOwner } = req.body;
-    console.log({ owner: resultOwner })
-    const result = await Result.find({});
+    const prediction = await Result.find({ createdBy: req.creds.userId }).sort('createdAt');
+    //TODO: get imgURL and Desc from recipe database
     console.log("getting all data");
-    res.status(200).json({result})
+    res.status(200).json({ success: true, count: prediction.length, prediction});
   } catch(error) {
-    res.status(500).json({msg: error});
+    res.status(500).json({success: false, msg: error});
   }
 };
 
 const getPredictionByID = async (req,res) => {
   try{
-    const {id:resultID} = req.params;
-    const result = await Result.findOne({ _id:resultID});
-    if (!result) {
+    const {id:predictionID} = req.params;
+    //check if the id is exist and owned by user
+    const prediction = await Result.findOne({_id: predictionID, createdBy: req.creds.userId});
+    if (!prediction) {
       return res
-      .status(404)
-      .json({  msg: `no prediction with id ${resultID}` })
+      .status(404).json({  succsess: false, msg: `no prediction with id ${predictionID}` })
     }
 
-    res.status(200).json({ result });
+    //get the food detailed info
+    const recipeData = await recipe.findOne({ name: prediction.result });
+    if(!recipeData) {
+      return res.status(404).json({  succsess: false, msg: `no recipe with food ${prediction.result}` })
+    }
+    const resPrediction = { name: prediction.name, resep: recipeData.recipe, video: recipeData.video }
+    
+    res.status(200).json({ success: true, resPrediction });
 
     } catch(error) {
-    res.status(500).json({ msg:error });
+    res.status(500).json({ success: false, msg:error });
   }
 }
 
 const newFoodPrediction = async (req, res) => {
   try {
-    const result = await Result.create(req.body);
+    req.body.createdBy = req.creds.userId
     //upload image to bucket and get the url
     //do prediction to the model and return the result
     //make a json response that pretty much have all of it + upload to db for stuff
-    res.status(201).json({ result });
+
+    const tempreq = { ...req.body, imageURL: 'gs://', result: 'Soto' };
+
+    const result = await Result.create(tempreq);
+    res.status(201).json({ success: true, result });
   } catch (error) {
-    res.status(500).json({ msg: error });
+    res.status(500).json({ success: false, msg: error });
   }
 }
 
 const deleteResultByID = async (req, res) => {
   try{
     const { id:resultID } = req.params;
-    const result = await Result.findOneAndDelete({ _id: resultID });
+    const result = await Result.findOneAndDelete({ _id: resultID, createdBy: userId});
     if (!result) {
-      return res.status(404).json({ status: 'failed', msg: `No task with id : ${taskID}` })
+      return res.status(404).json({ success: false, msg: `No task with id : ${taskID}` })
     }
-    res.status(200).json({ status: 'success', msg: `${result.id} succesfully deleted` });
+    res.status(200).json({ success: true, msg: `${result.id} succesfully deleted` });
   } catch (error) {
-    return res.status(500).json({ status: 'failed', msg: error });
+    return res.status(500).json({ success: false, msg: error });
   }
 }
 

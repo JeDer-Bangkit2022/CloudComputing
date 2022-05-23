@@ -1,4 +1,6 @@
-const foodRouter = require('./routes/predictionRouter');
+const predictRouter = require('./routes/predictionRouter');
+const userRouter = require('./routes/userRouter');
+const authCheck = require('./middleware/auth');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const connectDB = require('./db/connect');
@@ -8,7 +10,8 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(cors({origin: true}));
-app.use('/prediction', foodRouter);
+app.use('/prediction', authCheck, predictRouter);
+app.use('/user', userRouter);
 
 app.get("/", async (req, res) => {
     res.status(200).send("Hello JeDer");

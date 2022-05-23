@@ -1,10 +1,10 @@
 const express = require('express');
 const router = new express.Router();
-const foodController = require('../controller/predictionController');
+const predictController = require('../controller/predictionController');
 
-router.get('/', foodController.getAllPrediction);
-router.get('/:id', foodController.getPredictionByID);
-router.post('/', foodController.newFoodPrediction);
-router.delete('/:id', foodController.deleteResultByID);
+router.get('/', predictController.getAllPrediction);
+router.get('/:id',  predictController.getPredictionByID);
+router.post('/',  predictController.newFoodPrediction);
+router.delete('/:id',  predictController.deleteResultByID);
 
 module.exports = router;
