@@ -6,9 +6,31 @@ const Result = require('../models/result');
 const getAllPrediction = async (req, res) => {
   try {
     const prediction = await Result.find({ createdBy: req.creds.userId }).sort('createdAt');
-    //TODO: get imgURL and Desc from recipe database
+
+    console.log(prediction);
+
+    // //get the food name of every prediction 
+    let foodName = [];
+    prediction.map((item) => {
+      foodName.push(item.result);
+    })
+
+    let responData = []
+    await Promise.all(foodName.map(async (d, i) => {
+      const foodData = await recipe.findOne({ name: d });
+      console.log(foodData);
+      responData.push({
+        id: prediction[i]._id,
+        name: prediction[i].result,
+        imageUrl: prediction[i].imageUrl,
+        description: foodData.description
+      });
+      console.log(prediction[i].imageURL);
+    }));
+
     console.log("getting all data");
-    res.status(200).json({ success: true, count: prediction.length, prediction});
+    console.log(prediction);
+    res.status(200).json({ success: true, count: prediction.length, responData});
   } catch(error) {
     res.status(500).json({success: false, msg: error});
   }
@@ -40,14 +62,12 @@ const getPredictionByID = async (req,res) => {
 
 const newFoodPrediction = async (req, res) => {
   try {
-    req.body.createdBy = req.creds.userId
+    req.body.createdBy = req.creds.userId;
     //upload image to bucket and get the url
     //do prediction to the model and return the result
     //make a json response that pretty much have all of it + upload to db for stuff
-
-    const tempreq = { ...req.body, imageURL: 'gs://', result: 'Soto' };
-
-    const result = await Result.create(tempreq);
+    console.log(req.body);
+    const result = await Result.create(req.body);
     res.status(201).json({ success: true, result });
   } catch (error) {
     res.status(500).json({ success: false, msg: error });
