@@ -6,7 +6,6 @@ const authCheck = async(req, res, next) => {
     if(!authToken || !authToken.startsWith('Bearer ') || authToken.split(" ").length !== 2) {
         return res.status(401).json({ success: false, msg: 'Token not Provided!'});
     }
-    console.log(authToken);
     const token = authToken.split(' ')[1];
 
     try {

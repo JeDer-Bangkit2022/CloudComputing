@@ -6,7 +6,7 @@ const login = async (req, res) => {
 
         if( !email || !password ) {
             return res.status(400).json({success: false, msg: 'Please provide email and password'});
-        } s
+        }
         const user = await User.findOne({email});
         
         if (!user){

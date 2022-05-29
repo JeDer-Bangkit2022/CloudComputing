@@ -7,6 +7,7 @@ const connectDB = require('./db/connect');
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const port = process.env.PORT || 443;
 
 app.use(bodyParser.json());
 app.use(cors({origin: true}));
@@ -20,7 +21,7 @@ app.get("/", async (req, res) => {
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
-    app.listen(5000, ()=>{
+    app.listen(port, ()=>{
       console.log('Server is running...');
   });
   

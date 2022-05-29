@@ -1,6 +1,7 @@
 const recipe = require('../models/recipe');
 const Result = require('../models/result');
-
+const axios = require('axios');
+const uploadImage = require('./imgController');
 
 //get all data that own by a user
 const getAllPrediction = async (req, res) => {
@@ -57,29 +58,44 @@ const getPredictionByID = async (req,res) => {
 
     } catch(error) {
     res.status(500).json({ success: false, msg:error });
-  }
+  } 
 }
 
 const newFoodPrediction = async (req, res) => {
   try {
-    req.body.createdBy = req.creds.userId;
+    const createdBy = req.creds.userId;
+
     //upload image to bucket and get the url
+    const imageUrl = await uploadImage(req.file);
     //do prediction to the model and return the result
+
+
+    // const makePredict = axios.post('link-to-the-ml-model')
+    //   .then((response) => {
+    //     console.log(response.status);
+    //   })
+    const result = 'Soto';
     //make a json response that pretty much have all of it + upload to db for stuff
-    console.log(req.body);
-    const result = await Result.create(req.body);
-    res.status(201).json({ success: true, result });
+    const data = {
+       createdBy,   
+       imageUrl,
+       result
+     }
+     const fnlResult = await Result.create(data);
+    res.status(201).json({ success: true, fnlResult });
   } catch (error) {
     res.status(500).json({ success: false, msg: error });
+    console.log(error)
   }
 }
 
 const deleteResultByID = async (req, res) => {
   try{
     const { id:resultID } = req.params;
-    const result = await Result.findOneAndDelete({ _id: resultID, createdBy: userId});
+    const result = await Result.findOneAndDelete({ _id: resultID, createdBy: req.creds.userId});
+    console.log(result)
     if (!result) {
-      return res.status(404).json({ success: false, msg: `No task with id : ${taskID}` })
+      return res.status(404).json({ success: false, msg: `No result with id : ${resultID}` })
     }
     res.status(200).json({ success: true, msg: `${result.id} succesfully deleted` });
   } catch (error) {
