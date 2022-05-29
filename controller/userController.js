@@ -28,8 +28,7 @@ const login = async (req, res) => {
 const register = async(req, res) => {
     try {
         const user = await User.create({...req.body});
-        const token = user.generateJWT();
-        res.status(201).json({ success: true, user: {id: user._id, name: user.name}, token });
+        res.status(201).json({ success: true, user: {id: user._id, name: user.name}});
     } catch (error) {
         return res.status(500).json({success: false, msg: error});
     }

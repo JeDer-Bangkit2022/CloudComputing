@@ -71,6 +71,46 @@ This repository is used to keep track of the CC Team backend services
 }
 ```
 
+## POST NEW PREDICTION
+
+Post a picture to get new prediction
+
+**ENDPOINT** : `/prediction`
+
+**Method** : `POST`
+
+**Auth required** : YES
+
+**Request Header**
+
+```
+Authorization : Bearer `${jwt-token}`
+```
+
+**Request Body**
+
+```
+//form-data in postman, idk
+`image : image.jpg`
+```
+## Success Response
+
+**Code** : `200`
+
+**JSON Response example**
+
+```json
+{
+    "success": true,
+    "fnlResult": {
+        "createdBy": "628baad06373f0d3ac94285b",
+        "imageUrl": "https://storage.googleapis.com/test-img-bucket-1/farm-house.jpg",
+        "result": "Soto",
+        "_id": "6293ad4da69caca19d995de5",
+        "__v": 0
+    }
+}
+```
 
 ## GET ALL PREDICTION
 
