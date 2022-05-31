@@ -10,6 +10,7 @@ const app = express();
 const port = process.env.PORT || 443;
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); 
 app.use(cors({origin: true}));
 app.use('/prediction', authCheck, predictRouter);
 app.use('/user', userRouter);
