@@ -1,6 +1,3 @@
-# CloudComputing
-This repository is used to keep track of the CC Team backend services
-
 ## USER REGISTER
 
 **URL** : `https://named-reporter-343719.as.r.appspot.com`
@@ -102,14 +99,13 @@ Authorization : Bearer `${jwt-token}`
 ```json
 {
     "success": true,
-    "fnlResult": {
-        "createdBy": "628baad06373f0d3ac94285b",
-        "imageUrl": "https://storage.googleapis.com/test-img-bucket-1/farm-house.jpg",
-        "result": "Soto",
-        "_id": "6293ad4da69caca19d995de5",
-        "__v": 0
-    }
-}
+    "result": "Nastar",
+    "resultAccuracy": 100,
+    "imageUrl": "https://storage.googleapis.com/test-bucket-for-new-model/userImage/628baad06373f0d3ac94285b_Nastar.jpg",
+    "recipe": "resep Nastar",
+    "description": "deskripsi Nastar",
+    "ytCode": "cM963tI7Q_k"
+}  
 ```
 
 ## GET ALL PREDICTION

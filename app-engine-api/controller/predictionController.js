@@ -1,13 +1,12 @@
 const recipe = require('../models/recipe');
 const Result = require('../models/result');
-const axios = require('axios');
-const uploadImage = require('./imgController');
+const uploadImage = require('../handler/imgHandler');
+const getResult = require('../handler/readResultHandler');
 
 //get all data that own by a user
 const getAllPrediction = async (req, res) => {
   try {
     const prediction = await Result.find({ createdBy: req.creds.userId }).sort('createdAt');
-
     // //get the food name of every prediction 
     let foodName = [];
     prediction.map((item) => {
@@ -61,39 +60,35 @@ const newFoodPrediction = async (req, res) => {
     const createdBy = req.creds.userId;
 
     //upload image to bucket and get the url
-    const imageUrl = await uploadImage(req.file);
+    const imageUrl = await uploadImage(req.file, req.creds.userId);
+
     //do prediction to the model and return the result
+    const tempResult = await getResult();
+    console.log(tempResult);
 
+    const resultObj = { result: tempResult.Prediction, resultAccuracy: tempResult.Confidence };
 
-    // axios.post('http://link-to-ml-model', {
-    //   imageUrl
-    // })
-    // .then((response) => {
-    //   console.log(response);
-    // }, (error) => {
-    //   console.log(error);
-    // });
-
-    const result = 'Soto';
+    //const result = tempResult.foodName
     //make a json response that pretty much have all of it + upload to db for stuff
 
-    const detailPred = await recipe.findOne({ name : result });
+    const detailPred = await recipe.findOne({ name : resultObj.result });
 
     const data = {
        createdBy,   
        imageUrl,
-       result
+       ...resultObj
      }
 
      const dbResult = await Result.create(data);
-     const fnlResult = {
-       result: dbResult.result,
-       recipe: detailPred.recipe,
-       ytCode: detailPred.video
-     };
 
-     
-    res.status(201).json({ success: true, fnlResult });
+    res.status(201).json({ success: true, 
+                           result: dbResult.result, 
+                           resultAccuracy: dbResult.resultAccuracy,
+                           imageUrl, 
+                           recipe: detailPred.recipe,
+                           description: detailPred.description, 
+                           ytCode: detailPred.video });
+  
   } catch (error) {
     res.status(500).json({ success: false, msg: error });
   }

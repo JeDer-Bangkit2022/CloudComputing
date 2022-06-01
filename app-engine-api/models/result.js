@@ -8,6 +8,7 @@ const resultSchema = new mongoose.Schema({
     },
     imageUrl: String,
     result: String,
+    resultAccuracy: Number,
 }, { timestamp: true })
 
 module.exports =  mongoose.model('Result', resultSchema);

@@ -1,13 +1,13 @@
 const util = require('util')
-const gs = require('../config/')
-const bucket = gs.bucket('test-img-bucket-1')
+const gs = require('../config')
+const bucket = gs.bucket('test-bucket-for-new-model')
 
 const { format } = util
 
-const uploadImage = (file) => new Promise((resolve, reject) => {
-  const { originalname, buffer } = file
-
-  const blob = bucket.file(originalname.replace(/ /g, "_"))
+const uploadImage = (file, userId) => new Promise((resolve, reject) => {
+  const { originalname, buffer } = file;
+  const blob = bucket.file(originalname.replace(/ /g, "_"));
+  blob.name = `${userId}_${blob.name}`;
   const blobStream = blob.createWriteStream({
     resumable: false
   })
@@ -23,6 +23,6 @@ const uploadImage = (file) => new Promise((resolve, reject) => {
   })
   .end(buffer)
 
-})
+});
 
 module.exports = uploadImage
