@@ -9,4 +9,5 @@ This script (main.py) was used to automate the online prediction process through
 - Deploy the custom machine learning model through AI Platform and create a model version to deploy.
 - Create a Google Cloud Function script with Google Cloud Storage Trigger referencing to the bucket which we upload the picture into.
 - Create functions in the GCF script that has three purposes which are downlading the uploaded picture into GCF temp directory, making the prediction using ai platform model that has been deployed, and uploading the result back into Google Cloud Storage.
+- Deploy the Google Cloud Functions to make online predictions.
 
