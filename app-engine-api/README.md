@@ -111,7 +111,7 @@ Authorization : Bearer `${jwt-token}`
 
 get data of prediction that requested by a user
 
-**ENDPOINT** : `/prediction`
+**ENDPOINT** : `/prediction/history`
 
 **Method** : `GET`
 
@@ -158,7 +158,7 @@ Authorization : Bearer `${jwt-token}`
 
 get specific prediction result by id
 
-**EndPoint** : `/prediction/:id`
+**EndPoint** : `/prediction/history/:id`
 
 **Method** : `GET`
 
@@ -193,7 +193,7 @@ get specific prediction result by id
 
 Delete a result from db by id
 
-**ENDPOINT** : `/prediction/:id`
+**ENDPOINT** : `/prediction/history/:id`
 
 **Method** : `DELETE`
 
