@@ -14,17 +14,18 @@ const getAllPrediction = async (req, res) => {
     })
 
     let responData = []
+    const options = {year: 'numeric', month: 'numeric', day: 'numeric' };
     await Promise.all(foodName.map(async (d, i) => {
       const foodData = await recipe.findOne({ name: d });
       responData.push({
         id: prediction[i]._id,
+        timestamp: prediction[i]._id.getTimestamp().toISOString().split`T`[0],
         name: prediction[i].result,
         imageUrl: prediction[i].imageUrl,
         description: foodData.description
       });
     }));
 
-    console.log("getting all data");
     res.status(200).json({ success: true, count: prediction.length, responData});
   } catch(error) {
     res.status(500).json({success: false, msg: error});
@@ -46,9 +47,14 @@ const getPredictionByID = async (req,res) => {
     if(!recipeData) {
       return res.status(404).json({  succsess: false, msg: `no recipe with food ${prediction.result}` })
     }
-    const resPrediction = { name: prediction.name, resep: recipeData.recipe, video: recipeData.video }
-    
-    res.status(200).json({ success: true, resPrediction });
+    const resPrediction = { result: prediction.result,
+                            resultAccuracy: prediction.resultAccuracy,
+                            imageUrl: prediction.imageUrl, 
+                            recipe: recipeData.recipe,
+                            description: recipeData.description, 
+                            ytCode: recipeData.video }
+
+    res.status(200).json({ success: true, ...resPrediction });
 
     } catch(error) {
     res.status(500).json({ success: false, msg:error });
@@ -64,7 +70,6 @@ const newFoodPrediction = async (req, res) => {
 
     //do prediction to the model and return the result
     const tempResult = await getResult();
-    console.log(tempResult);
 
     const resultObj = { result: tempResult.Prediction, resultAccuracy: tempResult.Confidence };
 
