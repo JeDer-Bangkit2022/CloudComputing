@@ -29,8 +29,7 @@
     "user": {
         "id": "62934bb3bee9dfeb4324d4e3",
         "name": "Kobo"
-    },
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjkzNGJiM2JlZTlkZmViNDMyNGQ0ZTMiLCJuYW1lIjoiSm9obiIsImlhdCI6MTY1MzgyMDM0MCwiZXhwIjoxNjU2NDEyMzQwfQ.4jqc9nfWpQ28rEruyKkcSLO415aBpMVRNehO5d6rVrM"
+    }
 }
 
 ```
