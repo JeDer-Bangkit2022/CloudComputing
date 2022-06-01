@@ -100,7 +100,7 @@ Authorization : Bearer `${jwt-token}`
     "success": true,
     "result": "Nastar",
     "resultAccuracy": 100,
-    "imageUrl": "https://storage.googleapis.com/test-bucket-for-new-model/userImage/628baad06373f0d3ac94285b_Nastar.jpg",
+    "imageUrl": "https://storage.googleapis.com/test-bucket-for-new-model/628baad06373f0d3ac94285b_Nastar.jpg",
     "recipe": "resep Nastar",
     "description": "deskripsi Nastar",
     "ytCode": "cM963tI7Q_k"
