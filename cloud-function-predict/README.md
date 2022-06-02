@@ -1,6 +1,6 @@
 # Deploying Custom Model and Getting Online Prediction
 
-This script (main.py) was used to automate the online prediction process through [Google Cloud Function](https://cloud.google.com/functions) service and access custom Machine Learning models that has been deployed using [Google AI Platform] which stored in [Google Cloud Storage]. The food-picture that are uploaded to cloud storage will be processed and the resulting prediction will be stored back to Google Cloud Storage in a JSON format.
+This script (main.py) was used to automate the online prediction process through [Google Cloud Function](https://cloud.google.com/functions) service and access custom Machine Learning models that has been deployed using [Google AI Platform](https://cloud.google.com/ai-platform/docs) which stored in [Google Cloud Storage](https://cloud.google.com/storage). The food-picture that are uploaded to cloud storage will be processed and the resulting prediction will be stored back to Google Cloud Storage in a JSON format.
 
 ## Implementation Process
 
