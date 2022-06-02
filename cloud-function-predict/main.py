@@ -10,24 +10,25 @@ def cloud_storage_trigger(event, context):
 
     file = event
     if '.jpeg' in file['name'] or '.jpg' in file['name']  or '.png' in file['name']:
-        def preprocess(uploaded_picture):
-            img = tf.keras.utils.load_img(uploaded_picture, target_size=(150, 150))
+        def preprocess(uploaded_image):
+            
+            img = tf.keras.utils.load_img(uploaded_image, target_size=(150, 150))
             x = tf.keras.preprocessing.image.img_to_array(img)
             x = np.expand_dims(x, axis=0)
             x = tf.keras.applications.xception.preprocess_input(x)
-
             image = np.vstack([x])
+
             return image
 
-        def download_blob(bucket_name, source_blob_name):
-
+        def download_image(bucket_name, source_image_name):
+           
             storage_client = storage.Client()
             bucket = storage_client.bucket(bucket_name)
-            blob = bucket.blob(source_blob_name)
-            uploaded_picture = '/tmp/'+source_blob_name
-            blob.download_to_filename(uploaded_picture)
+            blob = bucket.blob(source_image_name)
+            uploaded_image = '/tmp/'+source_image_name
+            blob.download_to_filename(uploaded_image)
 
-            return uploaded_picture
+            return uploaded_image
 
         def predict_json(project, region, model, instances, version=None):
       
@@ -51,28 +52,28 @@ def cloud_storage_trigger(event, context):
 
             return response['predictions']
 
-        #download uploaded-picture from GCS Bucket
-        uploaded_picture = download_blob('test-bucket-for-new-model', file['name'])
+        #Download uploaded-image from GCS Bucket
+        uploaded_image = download_image('jeder-storage-bucket', file['name'])
         
         print("File Successfully Downloaded")
 
-        #preprocess the picture
-        image = preprocess(uploaded_picture)
+        #Preprocess the image
+        image = preprocess(uploaded_image)
 
-        #predict picture with Machine Learning Model from AI Platform and making json file out of the result
-        project_name = 'named-reporter-343719'
+        #Predict image with Machine Learning Model from AI Platform then make JSON file out of the result
+        project_name = 'capstone-project-jeder'
         region = 'asia-southeast1'
-        model = 'test_model'
-        version = 'model_version2'
+        model = 'jeder_classification_model'
+        version = 'version_1'
         instances = image.tolist()
-        response = predict_json(project_name, region, model, instances, version)
-        probability = response[0]
-        result_idx = np.argmax(probability)
+        result = predict_json(project_name, region, model, instances, version)
+        probability = result[0]
+        top_idx = np.argmax(probability)
 
         print("Prediction process done!")
         
         labels = ['Akar Kelapa', 'Bakmi', 'Bakso', 'Kue Bangkit', 'Kue Tambang', 'Nasi Goreng', 'Nastar', 'Onde Onde', 'Orek Tempe', 'Rendang', 'Sate', 'Semur Tahu']
-        food_result = labels[result_idx]
+        food_result = labels[top_idx]
         confidence = max(probability) * 100
 
         print("Prediction Result: ")
@@ -81,14 +82,14 @@ def cloud_storage_trigger(event, context):
         
         result_json = {"Prediction": food_result,"Confidence": confidence}
 
-        #upload the result to GCS
+        #Upload the result to GCS Bucket
         storage_client = storage.Client()
-        bucket = storage_client.bucket('test-bucket-for-new-model')
+        bucket = storage_client.bucket('jeder-storage-bucket')
         blob = bucket.blob('result.json')
 
         blob.upload_from_string(
-          data=json.dumps(result_json),
-          content_type='application/json'
+          data = json.dumps(result_json),
+          content_type = 'application/json'
           )
 
         print("Result uploaded to GCS")
